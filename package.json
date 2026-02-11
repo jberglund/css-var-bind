@@ -36,12 +36,14 @@
   ],
   "scripts": {
     "build": "bun run tsc",
+    "build:docs": "bun build ./docs/index.html",
     "analyze": "cem analyze",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "publint": "bunx publint",
     "dev": "bun index.html",
-    "prepublishOnly": "bun run lint && bun run build && bun run analyze"
+    "prepublishOnly": "bun run lint && bun run build && bun run analyze",
+    "predeploy": "bun run build:docs"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.14",
