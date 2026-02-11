@@ -40,7 +40,7 @@
     "lint:fix": "biome check --write .",
     "publint": "bunx publint",
     "dev": "bun index.html",
-    "prepublishOnly": "bun run lint && bun run build && npm run analyze"
+    "prepublishOnly": "bun run lint && bun run build && bun run analyze"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.14",
