@@ -13,6 +13,7 @@
   ],
   "author": "Jacob Berglund",
   "license": "MIT",
+  "customElements": "dist/custom-elements.json",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jberglund/css-var-bind.git"
@@ -26,21 +27,25 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./custom-elements.json": "./custom-elements.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "custom-elements.json"
   ],
   "scripts": {
     "build": "bun run tsc",
+    "analyze": "cem analyze",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "publint": "bunx publint",
     "dev": "bun index.html",
-    "prepublishOnly": "bun run lint && bun run build"
+    "prepublishOnly": "bun run lint && bun run build && bun run analyze"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.14",
+    "@custom-elements-manifest/analyzer": "^0.11.0",
     "typescript": "^5.9.3"
   }
 }

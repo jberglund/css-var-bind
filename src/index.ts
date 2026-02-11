@@ -77,9 +77,7 @@ class CssVarBind extends HTMLElement {
 
     switch (strategy) {
       case "global":
-        this.bindToElement = target
-          ? (document.querySelector(target) as HTMLElement)
-          : null;
+        this.bindToElement = target ? (document.querySelector(target) as HTMLElement) : null;
         break;
       case "self":
         this.bindToElement = this;
@@ -116,10 +114,7 @@ class CssVarBind extends HTMLElement {
   handleSteppedInputs(target: HTMLInputElement) {
     if (!this.bindToElement) return;
 
-    this.bindToElement.style.setProperty(
-      this.cssVariableName,
-      target.value + this.unit,
-    );
+    this.bindToElement.style.setProperty(this.cssVariableName, target.value + this.unit);
 
     this.syncInputs(target);
   }
@@ -143,16 +138,10 @@ class CssVarBind extends HTMLElement {
       }
       if (input.value) {
         // if input has a value already, set the css variable to that value
-        this.bindToElement?.style.setProperty(
-          this.cssVariableName,
-          input.value + this.unit,
-        );
+        this.bindToElement?.style.setProperty(this.cssVariableName, input.value + this.unit);
       }
       if (input.value === "") {
-        input.value = this.stripUnit(
-          root.getPropertyValue(this.cssVariableName),
-          this.unit,
-        );
+        input.value = this.stripUnit(root.getPropertyValue(this.cssVariableName), this.unit);
       }
     });
   }
