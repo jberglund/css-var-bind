@@ -30,5 +30,8 @@
     "formatter": {
       "trailingCommas": "none"
     }
+  },
+  "html": {
+    "formatter": {}
   }
 }

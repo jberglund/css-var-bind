@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>css-var-bind - Interactive Demo</title>
+    <script type="module" src="../src/index.ts"></script>
+    <style>
+        :root {
+          /* Colors */
+          --primary: #fcfcfc;
+          --bg: #1b2320;
+          --accent: #51e1a5;
+          --border: #2b3131;
+
+          /* Typography — modular scale using pow() */
+          --font-size: 17px;
+          --line-height: 1.6;
+          --letter-spacing: -0.01em;
+          --scale-ratio: 1.25;
+          --font-size-s:   calc(var(--font-size) * pow(var(--scale-ratio), -1)); /* ~13.6px */
+          --font-size-m:   var(--font-size);                                     /*  17px   */
+          --font-size-l:   calc(var(--font-size) * pow(var(--scale-ratio), 1));  /* ~21.3px */
+          --font-size-xl:  calc(var(--font-size) * pow(var(--scale-ratio), 2));  /* ~26.6px */
+          --font-size-2xl: calc(var(--font-size) * pow(var(--scale-ratio), 3));  /* ~33.2px */
+          --font-size-3xl: calc(var(--font-size) * pow(var(--scale-ratio), 4));  /* ~41.5px */
+          --font-size-4xl: calc(var(--font-size) * pow(var(--scale-ratio), 5));  /* ~51.9px */
+
+          /* Spacing — Fibonacci sequence (1, 2, 3, 5, 8, 13, 21) */
+          --spacing-factor: 1;
+          --spacing-unit: 0.25rem;
+          --spacing-3xs: calc(var(--spacing-unit) * 1 * var(--spacing-factor));  /*  4px */
+          --spacing-2xs: calc(var(--spacing-unit) * 2 * var(--spacing-factor));  /*  8px */
+          --spacing-xs:  calc(var(--spacing-unit) * 3 * var(--spacing-factor));  /* 12px */
+          --spacing-s:   calc(var(--spacing-unit) * 5 * var(--spacing-factor));  /* 20px */
+          --spacing-m:   calc(var(--spacing-unit) * 8 * var(--spacing-factor));  /* 32px */
+          --spacing-l:   calc(var(--spacing-unit) * 13 * var(--spacing-factor)); /* 52px */
+          --spacing-xl:  calc(var(--spacing-unit) * 21 * var(--spacing-factor)); /* 84px */
+
+          /* Layout */
+          --radius: 14px;
+          --container-width: 900px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+            font-size: var(--font-size-m);
+            line-height: var(--line-height);
+            letter-spacing: var(--letter-spacing);
+            color: var(--primary);
+            background: var(--bg);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 var(--spacing-s);
+            transition: max-width 0.3s ease;
+        }
+
+        header {
+            padding: var(--spacing-xl) 0 var(--spacing-l);
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            transition: padding 0.3s ease;
+        }
+
+        header h1 {
+            font-size: var(--font-size-4xl);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: var(--spacing-xs);
+            transition: font-size 0.3s ease, margin 0.3s ease;
+        }
+
+        header p {
+            font-size: var(--font-size-l);
+            color: var(--primary);
+            opacity: 0.6;
+            margin-bottom: var(--spacing-s);
+            transition: font-size 0.3s ease, margin 0.3s ease;
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-2xs);
+            padding: var(--spacing-xs) var(--spacing-s);
+            background: var(--accent);
+            color: var(--bg);
+            text-decoration: none;
+            border-radius: var(--radius);
+            font-size: var(--font-size-s);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .github-link:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        section {
+            padding: var(--spacing-l) 0;
+            border-bottom: 1px solid var(--border);
+            transition: padding 0.3s ease;
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        h2 {
+            font-size: var(--font-size-2xl);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--spacing-s);
+            transition: font-size 0.3s ease, margin 0.3s ease;
+        }
+
+        h3 {
+            font-size: var(--font-size-l);
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+            margin-top: var(--spacing-m);
+            transition: font-size 0.3s ease, margin 0.3s ease;
+        }
+
+        p {
+            color: var(--primary);
+            opacity: 0.7;
+            margin-bottom: var(--spacing-s);
+            transition: margin 0.3s ease;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: var(--spacing-s);
+            transition: margin 0.3s ease;
+        }
+
+        ul li {
+            color: var(--primary);
+            opacity: 0.7;
+            padding-left: var(--spacing-s);
+            margin-bottom: var(--spacing-2xs);
+            position: relative;
+            transition: padding 0.3s ease, margin 0.3s ease;
+        }
+
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            opacity: 0.5;
+        }
+
+        code {
+            font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+            font-size: var(--font-size-s);
+            background: var(--primary);
+            color: var(--bg);
+            opacity: 0.9;
+            padding: 2px 6px;
+            border-radius: calc(var(--radius) * 0.33);
+            transition: font-size 0.3s ease, border-radius 0.3s ease;
+        }
+
+        pre {
+            background: var(--primary);
+            color: var(--bg);
+            opacity: 0.9;
+            border-radius: var(--radius);
+            padding: var(--spacing-s);
+            overflow-x: auto;
+            margin: var(--spacing-s) 0;
+            transition: all 0.3s ease;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            font-size: var(--font-size-s);
+            line-height: 1.6;
+            opacity: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-s) 0;
+            font-size: var(--font-size-s);
+            transition: margin 0.3s ease, font-size 0.3s ease;
+        }
+
+        thead {
+            border-bottom: 2px solid var(--border);
+        }
+
+        th {
+            text-align: left;
+            padding: var(--spacing-xs) var(--spacing-s);
+            font-weight: 600;
+            font-size: var(--font-size-s);
+            transition: padding 0.3s ease, font-size 0.3s ease;
+        }
+
+        td {
+            padding: var(--spacing-xs) var(--spacing-s);
+            border-bottom: 1px solid var(--border);
+            opacity: 0.7;
+            transition: padding 0.3s ease;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        footer {
+            padding: var(--spacing-l) 0;
+            text-align: center;
+            opacity: 0.5;
+            font-size: var(--font-size-s);
+            border-top: 1px solid var(--border);
+            transition: padding 0.3s ease, font-size 0.3s ease;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: opacity 0.15s ease;
+        }
+
+        footer a:hover {
+            opacity: 0.7;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            position: fixed;
+            top: var(--spacing-s);
+            right: var(--spacing-s);
+            width: 320px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .control-panel.collapsed {
+            width: auto;
+        }
+
+        .control-panel.collapsed .panel-content {
+            display: none;
+        }
+
+        .panel-header {
+            padding: var(--spacing-xs);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: padding 0.3s ease;
+        }
+
+        .panel-header h3 {
+            font-size: var(--font-size-s);
+            font-weight: 600;
+            margin: 0;
+            transition: font-size 0.3s ease;
+        }
+
+        .panel-controls {
+            display: flex;
+            gap: var(--spacing-2xs);
+            transition: gap 0.3s ease;
+        }
+
+        .panel-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--primary);
+            opacity: 0.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.15s ease;
+            font-size: 18px;
+        }
+
+        .panel-btn:hover {
+            opacity: 1;
+        }
+
+        .panel-content {
+            padding: var(--spacing-xs);
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            transition: padding 0.3s ease;
+            display: grid;
+            gap: var(--spacing-2xs);
+        }
+
+        .control-group {
+            margin-bottom: var(--spacing-m);
+            transition: margin 0.3s ease;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            font-size: var(--font-size-s);
+            font-weight: 500;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-3xs);
+            transition: font-size 0.3s ease, margin 0.3s ease;
+        }
+
+        .label-text {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2xs);
+        }
+
+        .info-icon {
+            appearance: none;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: help;
+            color: var(--primary);
+            opacity: 0.7;
+            font-size: var(--font-size-s);
+            transition: opacity 0.15s ease;
+        }
+
+        .info-icon:hover {
+            opacity: 0.8;
+        }
+
+        .value-display {
+            font-size: var(--font-size-s);
+            opacity: 0.5;
+            font-family: "SF Mono", Monaco, monospace;
+            transition: font-size 0.3s ease;
+            display: flex;
+            gap: var(--spacing-2xs);
+            align-items: center;
+        }
+
+        input[type="number"] {
+            width: 70px;
+            padding: 4px 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: "SF Mono", Monaco, monospace;
+            font-size: var(--font-size-s);
+            background: var(--bg);
+            color: var(--primary);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        input[type="color"] {
+            width: 100%;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            background: var(--bg);
+            transition: border-radius 0.3s ease;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 4px;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: calc(var(--radius) * 0.66);
+            transition: border-radius 0.3s ease;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: var(--spacing-xs);
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: var(--font-size-s);
+            font-weight: 500;
+            margin-top: var(--spacing-s);
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            opacity: 0.8;
+        }
+
+        [popover] {
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            border-radius: var(--radius);
+            padding: var(--spacing-2xs) var(--spacing-xs);
+            font-size: var(--font-size-s);
+            max-width: 200px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position-area: top x-end;
+        }
+
+        [popover]::backdrop {
+            background: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .control-panel {
+                width: calc(100% - var(--spacing-s) * 2);
+                left: var(--spacing-s);
+                right: var(--spacing-s);
+            }
+
+            header h1 {
+                font-size: var(--font-size-2xl);
+            }
+
+            section {
+                padding: var(--spacing-l) 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>css-var-bind</h1>
+            <p>Bind HTML inputs to CSS custom properties</p>
+            <a href="https://github.com/jberglund/css-var-bind" class="github-link">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+                View on GitHub
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <section>
+            <h2>Interactive Demo</h2>
+            <p>This entire page is styled using CSS custom properties. Use the control panel in the top-right corner to adjust the design in real-time. Every change you make demonstrates <code>css-var-bind</code> in action.</p>
+            <ul>
+                <li>Adjust colors, typography, spacing, and layout</li>
+                <li>See instant updates across the entire page</li>
+                <li>Click the <button class="info-icon" popovertarget="tooltip-joker">ⓘ</button><div popover="" id="tooltip-joker">That's the one!</div> icons for control descriptions</li>
+                <li>Click "Reset" to restore defaults</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Features</h2>
+            <p>A lightweight web component that binds HTML input elements to CSS custom properties (variables).</p>
+            <ul>
+                <li>Zero dependencies, minimal footprint</li>
+                <li>Works with range, number, color, text inputs</li>
+                <li>Automatic value syncing between inputs</li>
+                <li>Flexible scoping strategies (closest, global, self)</li>
+                <li>Simple, declarative API</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Installation</h2>
+            <pre><code>npm install css-var-bind</code></pre>
+            <p>Then import in your JavaScript:</p>
+            <pre><code>import 'css-var-bind';</code></pre>
+        </section>
+
+        <section>
+            <h2>Basic Usage</h2>
+            <p>Wrap any input element with <code>&lt;css-var-bind&gt;</code> and specify the CSS variable name.</p>
+            <pre><code>&lt;css-var-bind variable="--scale" target=":root" strategy="global"&gt;
+  &lt;input type="range" value="1" min="0.5" max="2" step="0.1"&gt;
+&lt;/css-var-bind&gt;</code></pre>
+            <p>The component automatically updates the CSS variable when inputs change, syncs values between multiple inputs, and applies units to values.</p>
+        </section>
+
+        <section>
+            <h2>API Reference</h2>
+
+            <h3>Attributes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Required</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>variable</code></td>
+                        <td>Yes</td>
+                        <td>-</td>
+                        <td>CSS custom property name (must start with <code>--</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>unit</code></td>
+                        <td>No</td>
+                        <td><code>""</code></td>
+                        <td>Unit to append (e.g., <code>px</code>, <code>rem</code>, <code>%</code>, <code>deg</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>target</code></td>
+                        <td>No</td>
+                        <td>-</td>
+                        <td>CSS selector for the element to set the variable on</td>
+                    </tr>
+                    <tr>
+                        <td><code>strategy</code></td>
+                        <td>No</td>
+                        <td><code>"closest"</code></td>
+                        <td>How to resolve the target: <code>"closest"</code>, <code>"global"</code>, or <code>"self"</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Strategy Options</h3>
+            <ul>
+                <li><strong>closest</strong> (default): Finds the nearest ancestor matching the <code>target</code> selector</li>
+                <li><strong>global</strong>: Uses <code>document.querySelector(target)</code> for global lookup</li>
+                <li><strong>self</strong>: Sets the variable on the component itself (ignores <code>target</code>)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Examples</h2>
+
+            <h3>Color Picker</h3>
+            <pre><code>&lt;css-var-bind target="body" variable="--bg-color"&gt;
+  &lt;input type="color" value="#b4d455" /&gt;
+&lt;/css-var-bind&gt;</code></pre>
+
+            <h3>Scoped to Ancestor</h3>
+            <pre><code>&lt;div class="card"&gt;
+  &lt;css-var-bind variable="--card-padding" unit="rem" target=".card"&gt;
+    &lt;input type="number" min="0" max="5" value="2" /&gt;
+  &lt;/css-var-bind&gt;
+&lt;/div&gt;</code></pre>
+
+            <h3>Self-Binding</h3>
+            <pre><code>&lt;css-var-bind variable="--opacity" strategy="self"&gt;
+  &lt;input type="range" min="0" max="1" step="0.1" value="1" /&gt;
+&lt;/css-var-bind&gt;</code></pre>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p></p>
+                Made by <a href="https://github.com/jberglund">Jacob Berglund</a>
+            </p>
+            <p>
+                <a href="https://github.com/jberglund/css-var-bind">GitHub</a>
+                ·
+                <a href="https://www.npmjs.com/package/css-var-bind">npm</a>
+                ·
+                <a href="https://github.com/jberglund/css-var-bind/blob/main/LICENSE">MIT License</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Control Panel -->
+    <div class="control-panel" id="controlPanel">
+        <div class="panel-header">
+            <h3>Style Controls</h3>
+            <div class="panel-controls">
+                <button class="panel-btn" id="togglePanel" aria-label="Toggle panel">−</button>
+            </div>
+        </div>
+        <div class="panel-content">
+            <!-- Colors -->
+            <css-var-bind variable="--primary" target=":root" strategy="global""">
+                <div class="control-group">
+                    <label>
+                        <span class="label-text">
+                            Primary Color
+                            <button class="info-icon" popovertarget="tooltip-primary">ⓘ</button>
+                        </span>
+                    </label>
+                    <input type="color" value="#000000">
+                </div>
+            </css-var-bind>
+            <div popover id="tooltip-primary">Controls text color and primary elements</div>
+
+            <css-var-bind variable="--bg" target=":root" strategy="global">
+                <div class="control-group">
+                    <label>
+                        <span class="label-text">
+                            Background
+                            <button class="info-icon" popovertarget="tooltip-bg">ⓘ</button>
+                        </span>
+                    </label>
+                    <input type="color" >
+                </div>
+            </css-var-bind>
+            <div popover id="tooltip-bg">Page background color</div>
+
+            <css-var-bind variable="--accent" target=":root" strategy="global">
+                <div class="control-group">
+                    <label>
+                        <span class="label-text">
+                            Accent Color
+                            <button class="info-icon" popovertarget="tooltip-accent">ⓘ</button>
+                        </span>
+                    </label>
+                    <input type="color" value="#000000">
+                </div>
+            </css-var-bind>
+            <div popover id="tooltip-accent">Button, link, and highlight color</div>
+
+            <css-var-bind variable="--border" target=":root" strategy="global">
+                <div class="control-group">
+                    <label>
+                        <span class="label-text">
+                            Border Color
+                            <button class="info-icon" popovertarget="tooltip-border">ⓘ</button>
+                        </span>
+                    </label>
+                    <input type="color" value="#e5e5e5">
+                </div>
+            </css-var-bind>
+            <div popover id="tooltip-border">All border colors throughout the page</div>
+
+            <!-- Typography -->
+            <css-var-bind variable="--font-size" unit="px" target=":root" strategy="global">
+                <div class="control-group">
+                    <label>
+                        <span class="label-text">
+                            Font Size
+                            <button class="info-icon" popovertarget="tooltip-font">ⓘ</button>
+                        </span>
+                        <span class="value-display">
+                            <input type="number"  min="14" max="20" step="1">
+                        </span>
+                    </label>
+                    <input type="range"  min="14" max="20" step="1">
+                </div>
+            </css-var-bind>
+            <div popover id="tooltip-font">Base font size that scales all text</div>
+
+            <css-var-bind variable="--line-height" target=":root" strategy="global">
+                <div class="control-group">
+                    <label>
+                        <span class="label-text">
+                            Line Height
+                            <button class="info-icon" popovertarget="tooltip-line">ⓘ</button>
+                        </span>
+                        <span class="value-display">
+                            <input type="number" value="1.6" min="1.4" max="2" step="0.1">
+                        </span>
+                    </label>
+                    <input type="range" value="1.6" min="1.4" max="2" step="0.1">
+                </div>
+            </css-var-bind>
+            <div popover id="tooltip-line">Vertical spacing between lines of text</div>
+
+            <css-var-bind variable="--letter-spacing" unit="em" target=":root" strategy="global">
+                <div class="control-group">
+                    <label>
+                        <span class="label-text">
+                            Letter Spacing
+                            <button class="info-icon" popovertarget="tooltip-letter">ⓘ</button>
+                        </span>
+                        <span class="value-display">
+                            <input type="number"  min="-0.05" max="0.1" step="0.01">
+                        </span>
+                    </label>
+                    <input type="range"  min="-0.05" max="0.1" step="0.01">
+                </div>
+            </css-var-bind>
+            <div popover id="tooltip-letter">Space between characters</div>
+
+            <!-- Layout -->
+            <css-var-bind variable="--radius" unit="px" target=":root" strategy="global">
+                <div class="control-group">
+                    <label>
+                        <span class="label-text">
+                            Border Radius
+                            <button class="info-icon" popovertarget="tooltip-radius">ⓘ</button>
+                        </span>
+                        <span class="value-display">
+                            <input type="number"  min="0" max="24" step="2">
+                        </span>
+                    </label>
+                    <input type="range"  min="0" max="24" step="2">
+                </div>
+            </css-var-bind>
+            <div popover id="tooltip-radius">Roundness of buttons, panels, and inputs</div>
+
+            <css-var-bind variable="--spacing-factor" target=":root" strategy="global">
+                <div class="control-group">
+                    <label>
+                        <span class="label-text">
+                            Spacing Scale
+                            <button class="info-icon" popovertarget="tooltip-spacing">ⓘ</button>
+                        </span>
+                        <span class="value-display">
+                            <input type="number" value="1" min="0.5" max="2" step="0.1">
+                        </span>
+                    </label>
+                    <input type="range" value="1" min="0.5" max="2" step="0.1">
+                </div>
+            </css-var-bind>
+            <div popover id="tooltip-spacing">Multiplier for all padding and margins</div>
+
+            <css-var-bind variable="--container-width" unit="px" target=":root" strategy="global">
+                <div class="control-group">
+                    <label>
+                        <span class="label-text">
+                            Container Width
+                            <button class="info-icon" popovertarget="tooltip-width">ⓘ</button>
+                        </span>
+                        <span class="value-display">
+                            <input type="number" value="900" min="600" max="1200" step="50">
+                        </span>
+                    </label>
+                    <input type="range" value="900" min="600" max="1200" step="50">
+                </div>
+            </css-var-bind>
+            <div popover id="tooltip-width">Maximum width of content</div>
+
+            <button class="reset-btn" id="resetBtn">Reset to Defaults</button>
+        </div>
+    </div>
+
+    <script>
+        // Toggle panel
+        const panel = document.getElementById('controlPanel');
+        const toggleBtn = document.getElementById('togglePanel');
+
+        toggleBtn.addEventListener('click', () => {
+            panel.classList.toggle('collapsed');
+            toggleBtn.textContent = panel.classList.contains('collapsed') ? '+' : '−';
+        });
+
+
+
+
+    </script>
+</body>
+</html>

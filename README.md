@@ -2,6 +2,8 @@
 
 A lightweight web component that binds HTML input elements to CSS custom properties (variables).
 
+## 🎨 [View Interactive Demos](https://jberglund.github.io/css-var-bind/)
+
 ## Installation
 
 ```bash
