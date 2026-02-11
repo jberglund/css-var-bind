@@ -1,4 +1,4 @@
 export default {
   globs: ["src/**/*.ts"],
-  outdir: ".",
+  outdir: "./dist",
 };

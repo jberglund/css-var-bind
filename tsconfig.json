@@ -10,7 +10,7 @@
     "strict": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
-    "isolatedModules": true
+    "isolatedModules": true,
   },
-  "include": ["src"]
+  "include": ["src"],
 }

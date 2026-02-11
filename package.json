@@ -13,6 +13,7 @@
   ],
   "author": "Jacob Berglund",
   "license": "MIT",
+  "customElements": "dist/custom-elements.json",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jberglund/css-var-bind.git"
@@ -46,6 +47,5 @@
     "@biomejs/biome": "^2.3.14",
     "@custom-elements-manifest/analyzer": "^0.11.0",
     "typescript": "^5.9.3"
-  },
-  "customElements": "custom-elements.json"
+  }
 }
