@@ -141,10 +141,7 @@ class CssVarBind extends HTMLElement {
         this.bindToElement?.style.setProperty(this.cssVariableName, input.value + this.unit);
       }
       if (input.value === "") {
-        input.value = this.stripUnit(
-          root.getPropertyValue(this.cssVariableName),
-          this.unit,
-        );
+        input.value = this.stripUnit(root.getPropertyValue(this.cssVariableName), this.unit);
       }
     });
   }
