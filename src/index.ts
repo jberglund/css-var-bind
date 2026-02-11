@@ -52,6 +52,11 @@ class CssVarBind extends HTMLElement {
     this.boundHandleInput = this.handleInput.bind(this);
   }
 
+  private stripUnit(value: string, unit: string): string {
+    if (!value) return "";
+    return unit ? value.trim().replaceAll(unit, "").trim() : value.trim();
+  }
+
   connectedCallback() {
     this.cssVariableName = this.getAttribute("variable") || "";
     this.unit = this.getAttribute("unit") || "";
@@ -128,7 +133,7 @@ class CssVarBind extends HTMLElement {
             `css-var-bind: CSS variable ${this.cssVariableName} is not set on the target element`,
           );
         } else {
-          input.value = cssValue;
+          input.value = this.stripUnit(cssValue, this.unit);
         }
       }
       if (input.value) {
@@ -136,7 +141,10 @@ class CssVarBind extends HTMLElement {
         this.bindToElement?.style.setProperty(this.cssVariableName, input.value + this.unit);
       }
       if (input.value === "") {
-        input.value = root.getPropertyValue(this.cssVariableName);
+        input.value = this.stripUnit(
+          root.getPropertyValue(this.cssVariableName),
+          this.unit,
+        );
       }
     });
   }
