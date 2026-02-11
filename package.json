@@ -1,7 +1,7 @@
 {
   "name": "css-var-bind",
   "version": "0.0.1",
-  "description": "A utility web component to update CSS variables based on the input within",
+  "description": "A utility web component which binds (and syncs) inputs to CSS variables",
   "license": "MIT",
   "type": "module",
   "exports": {
