@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A custom element that binds input elements to a CSS variable.\nIt also syncs values between different inputs, like range and number.",
+          "name": "CssVarBind",
+          "members": [
+            {
+              "kind": "field",
+              "name": "bindToElement",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "cssVariableName",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "inputs",
+              "type": {
+                "text": "NodeListOf<HTMLInputElement> | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "unit",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "boundHandleInput",
+              "type": {
+                "text": "(event: Event) => void"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleSteppedInputs",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "HTMLInputElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setValueIfCSSPropertyExists"
+            },
+            {
+              "kind": "method",
+              "name": "syncInputs",
+              "parameters": [
+                {
+                  "name": "changedInput",
+                  "type": {
+                    "text": "HTMLInputElement"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "**Required.** The CSS custom property name to bind to. Must start with `--` (e.g., `--scale`, `--primary-color`).",
+              "name": "variable"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Optional unit to append to the value when setting the CSS variable. Common values: `px`, `%`, `em`, `rem`, `deg`, etc.",
+              "name": "unit",
+              "default": "\"\""
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "CSS selector for the element on which to set the CSS variable. How this selector is resolved depends on the `strategy` attribute.",
+              "name": "target"
+            },
+            {
+              "type": {
+                "text": "\"closest\"|\"global\"|\"self\""
+              },
+              "description": "How to resolve the target selector. - `\"closest\"` — Uses `element.closest(target)` to find an ancestor (default). - `\"global\"` — Uses `document.querySelector(target)` for global lookup. - `\"self\"` — Ignores `target` and binds to the component itself.",
+              "name": "strategy",
+              "default": "\"closest\""
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "css-var-bind",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CssVarBind",
+            "module": "src/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "css-var-bind",
+          "declaration": {
+            "name": "CssVarBind",
+            "module": "src/index.ts"
+          }
+        }
+      ]
+    }
+  ]
+}
