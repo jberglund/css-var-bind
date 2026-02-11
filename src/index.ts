@@ -47,6 +47,9 @@ class CssVarBind extends HTMLElement {
   unit: string = "";
   private boundHandleInput: (event: Event) => void;
 
+  /** Input types that always have a browser-default value and can never be empty. */
+  private static readonly ALWAYS_HAS_VALUE = new Set(["color", "range"]);
+
   constructor() {
     super();
     this.boundHandleInput = this.handleInput.bind(this);
@@ -55,6 +58,25 @@ class CssVarBind extends HTMLElement {
   private stripUnit(value: string, unit: string): string {
     if (!value) return "";
     return unit ? value.trim().replaceAll(unit, "").trim() : value.trim();
+  }
+
+  /**
+   * Converts a CSS color value (rgb, hsl, named, hex, etc.) to #rrggbb hex format,
+   * which is the only format accepted by <input type="color">.
+   */
+  private toHex(cssColor: string): string {
+    const ctx = document.createElement("canvas").getContext("2d");
+    if (!ctx) return "#000000";
+    ctx.fillStyle = cssColor.trim();
+    return ctx.fillStyle; // always returns #rrggbb
+  }
+
+  /**
+   * Converts a raw CSS property value to the format expected by a given input type.
+   */
+  private cssToInputValue(cssValue: string, inputType: string): string {
+    if (inputType === "color") return this.toHex(cssValue);
+    return this.stripUnit(cssValue, this.unit);
   }
 
   connectedCallback() {
@@ -77,7 +99,9 @@ class CssVarBind extends HTMLElement {
 
     switch (strategy) {
       case "global":
-        this.bindToElement = target ? (document.querySelector(target) as HTMLElement) : null;
+        this.bindToElement = target
+          ? (document.querySelector(target) as HTMLElement)
+          : null;
         break;
       case "self":
         this.bindToElement = this;
@@ -92,8 +116,9 @@ class CssVarBind extends HTMLElement {
       return;
     }
 
+    this.setValueIfCSSPropertyExists();
+
     this.inputs.forEach((input) => {
-      this.setValueIfCSSPropertyExists();
       input.addEventListener("input", this.boundHandleInput);
     });
   }
@@ -114,7 +139,10 @@ class CssVarBind extends HTMLElement {
   handleSteppedInputs(target: HTMLInputElement) {
     if (!this.bindToElement) return;
 
-    this.bindToElement.style.setProperty(this.cssVariableName, target.value + this.unit);
+    this.bindToElement.style.setProperty(
+      this.cssVariableName,
+      target.value + this.unit,
+    );
 
     this.syncInputs(target);
   }
@@ -123,26 +151,37 @@ class CssVarBind extends HTMLElement {
     if (!this.bindToElement || !this.inputs) return;
 
     const root = getComputedStyle(this.bindToElement);
+    const cssValue = root.getPropertyValue(this.cssVariableName).trim();
 
     this.inputs.forEach((input) => {
       if (input.type === "radio") return;
-      if (input.type === "range") {
-        const cssValue = root.getPropertyValue(this.cssVariableName);
-        if (!cssValue) {
-          console.warn(
-            `css-var-bind: CSS variable ${this.cssVariableName} is not set on the target element`,
-          );
-        } else {
-          input.value = this.stripUnit(cssValue, this.unit);
-        }
+
+      const alwaysHasValue = CssVarBind.ALWAYS_HAS_VALUE.has(input.type);
+
+      if (alwaysHasValue && !cssValue) {
+        console.warn(
+          `css-var-bind: CSS variable ${this.cssVariableName} is not set on the target element`,
+        );
       }
-      if (input.value) {
-        // if input has a value already, set the css variable to that value
-        this.bindToElement?.style.setProperty(this.cssVariableName, input.value + this.unit);
-      }
-      if (input.value === "") {
-        input.value = this.stripUnit(root.getPropertyValue(this.cssVariableName), this.unit);
-      }
+
+      // For inputs that always carry a browser default (color, range),
+      // the CSS variable takes priority over the default.
+      // For inputs that can be empty (text, number, etc.),
+      // an explicitly set input value takes priority over the CSS variable.
+      const resolvedValue = alwaysHasValue
+        ? cssValue
+          ? this.cssToInputValue(cssValue, input.type)
+          : input.value
+        : input.value ||
+          (cssValue ? this.cssToInputValue(cssValue, input.type) : "");
+
+      if (!resolvedValue) return;
+
+      input.value = resolvedValue;
+      this.bindToElement?.style.setProperty(
+        this.cssVariableName,
+        resolvedValue + this.unit,
+      );
     });
   }
 
