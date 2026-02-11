@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>css-var-bind</title>
+    <style>
+      :root {
+        --base-font-size: 16px;
+      }
+
+      .text-s {
+        font-size: calc(var(--base-font-size) * pow(var(--scale-ratio), -1));
+      }
+      .text-m {
+        font-size: calc(var(--base-font-size) * pow(var(--scale-ratio), 1));
+      }
+
+      .text-l {
+        font-size: calc(var(--base-font-size) * pow(var(--scale-ratio), 2));
+      }
+
+      .text-xl {
+        font-size: calc(var(--base-font-size) * pow(var(--scale-ratio), 3));
+      }
+    </style>
+  </head>
+  <body>
+    <main style="display: grid; gap: 5rem">
+      <css-var-bind target="body" variable="--bg-color">
+        <input type="color" name="body-bg-color" value="#b4d455" />
+        <input type="text" />
+      </css-var-bind>
+
+      <css-var-bind variable="--scale-ratio" target=":root" strategy="global">
+        <input type="range" min="1" max="2" step="0.01" value="1.25" />
+        <input type="number" min="1" max="2" step="0.01" value="1.25" />
+      </css-var-bind>
+      <div>
+        <p class="text-s">Typescale example</p>
+        <p class="text-m">Typescale example</p>
+        <p class="text-l">Typescale example</p>
+        <p class="text-xl">Typescale example</p>
+      </div>
+
+      <!-- Bind to the closest ancestor with a class (default strategy) -->
+      <div class="example">
+        <css-var-bind variable="--example" unit="rem" target=".example">
+          <input type="number" min="0" max="5" value="2" />
+        </css-var-bind>
+      </div>
+
+      <!-- Bind to the component itself -->
+      <css-var-bind variable="--size" unit="rem" strategy="self">
+        <input type="range" min="1" max="10" step="0.1" value="0.1" />
+        <div
+          style="background-color: red; height: var(--size); aspect-ratio: 1"
+        ></div>
+      </css-var-bind>
+    </main>
+    <script type="module" src="./src/index.ts"></script>
+  </body>
+</html>
