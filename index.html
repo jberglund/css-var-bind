@@ -21,6 +21,23 @@
       .text-xl {
         font-size: calc(var(--base-font-size) * pow(var(--scale-ratio), 3));
       }
+
+      .gradient {
+        background: linear-gradient(
+          var(--gradient-angle, 90deg),
+          var(--gradient-color-1, #ff6b6b),
+          var(--gradient-color-2, #4ecdc4)
+        );
+        height: var(--gradient-height, 300px);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        font-weight: bold;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
     </style>
   </head>
   <body>
@@ -40,6 +57,56 @@
         <p class="text-l">Typescale example</p>
         <p class="text-xl">Typescale example</p>
       </div>
+
+      <!-- Gradient Generator Demo -->
+      <section class="gradient-demo">
+        <h2>Gradient Generator</h2>
+        <div
+          class="gradient"
+          style="
+            --gradient-angle: 90deg;
+            --gradient-color-1: #ff6b6b;
+            --gradient-color-2: #4ecdc4;
+            --gradient-height: 300px;
+          "
+        >
+          Gradient Preview
+        </div>
+
+        <div style="display: grid; gap: 1rem; margin-top: 1rem">
+          <css-var-bind variable="--gradient-color-1" target=".gradient-demo">
+            <label>Color 1: <input type="color" value="#ff6b6b" /></label>
+          </css-var-bind>
+
+          <css-var-bind variable="--gradient-color-2" target=".gradient-demo">
+            <label>Color 2: <input type="color" value="#4ecdc4" /></label>
+          </css-var-bind>
+
+          <css-var-bind
+            variable="--gradient-angle"
+            unit="deg"
+            target=".gradient-demo"
+          >
+            <label
+              >Angle:
+              <input type="range" min="0" max="360" value="90" />
+              <input type="number" min="0" max="360" value="90" />°
+            </label>
+          </css-var-bind>
+
+          <css-var-bind
+            variable="--gradient-height"
+            unit="px"
+            target=".gradient-demo"
+          >
+            <label
+              >Height:
+              <input type="range" min="100" max="600" value="300" />
+              <input type="number" min="100" max="600" value="300" />px
+            </label>
+          </css-var-bind>
+        </div>
+      </section>
 
       <!-- Bind to the closest ancestor with a class (default strategy) -->
       <div class="example">

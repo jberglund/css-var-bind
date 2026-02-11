@@ -2,7 +2,25 @@
   "name": "css-var-bind",
   "version": "0.0.1",
   "description": "A utility web component which binds (and syncs) inputs to CSS variables",
+  "keywords": [
+    "web-components",
+    "css-variables",
+    "custom-elements",
+    "css-custom-properties",
+    "input-binding",
+    "reactive",
+    "vanilla-js"
+  ],
+  "author": "Jacob Berglund",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jberglund/css-var-bind.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jberglund/css-var-bind/issues"
+  },
+  "homepage": "https://github.com/jberglund/css-var-bind#readme",
   "type": "module",
   "exports": {
     ".": {
