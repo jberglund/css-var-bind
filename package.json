@@ -36,7 +36,7 @@
   ],
   "scripts": {
     "build": "bun run tsc",
-    "build:docs": "bun build ./docs/index.html",
+    "build:docs": "bun build ./docs/index.html --outdir=dist/site --minify",
     "analyze": "cem analyze",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
