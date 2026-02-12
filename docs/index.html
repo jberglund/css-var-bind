@@ -319,6 +319,7 @@
         color: currentColor;
         border: none;
         width: 100%;
+        cursor: pointer;
       }
 
       .panel-header h3 {
@@ -758,7 +759,7 @@
           </span>
         </div>
       </button>
-      <div class="panel-content" popover="manual" id="panel">
+      <div class="panel-content" popover="manual" id="panel" open>
         <!-- Colors -->
         <css-var-bind variable="--primary" target=":root" strategy="global">
           <div class="control-group">
@@ -989,6 +990,7 @@
       //     ? "+"
       //     : "−";
       // });
+      document.querySelector(".panel-header").click();
     </script>
   </body>
 </html>
