@@ -306,14 +306,6 @@
         transition: all 0.3s ease;
       }
 
-      .control-panel.collapsed {
-        width: auto;
-      }
-
-      .control-panel.collapsed .panel-content {
-        display: none;
-      }
-
       .panel-header {
         padding: var(--spacing-xs);
         border-bottom: 1px solid var(--border);
@@ -321,6 +313,12 @@
         justify-content: space-between;
         align-items: center;
         transition: padding 0.3s ease;
+
+        appearance: none;
+        background: transparent;
+        color: currentColor;
+        border: none;
+        width: 100%;
       }
 
       .panel-header h3 {
@@ -358,9 +356,30 @@
         padding: var(--spacing-xs);
         max-height: calc(100vh - 200px);
         overflow-y: auto;
-        transition: padding 0.3s ease;
+        /*transition: padding 0.3s ease;*/
         display: grid;
         gap: var(--spacing-2xs);
+        background: inherit;
+        position-area: bottom center;
+        width: 100%;
+        opacity: 0;
+        pointer-events: none;
+        border: 1px solid var(--border);
+        border-radius: inherit;
+        margin-top: 1rem;
+        transform: translateY(-0.25rem);
+        transition:
+          padding 0.3s ease,
+          opacity 0.15s,
+          transform 0.15s,
+          overlay 0.15s allow-discrete,
+          display 0.15s allow-discrete;
+      }
+
+      .panel-content[popover]:popover-open {
+        opacity: 1;
+        pointer-events: all;
+        transform: translateY(0);
       }
 
       .control-group {
@@ -507,7 +526,7 @@
         opacity: 0.8;
       }
 
-      [popover] {
+      .tooltip[popover] {
         background: var(--primary);
         color: var(--bg);
         border: none;
@@ -577,7 +596,9 @@
           <li>
             Click the
             <button class="info-icon" popovertarget="tooltip-joker">ⓘ</button>
-            <div popover="" id="tooltip-joker">That's the one!</div>
+            <div popover class="tooltip" ="" id="tooltip-joker">
+              That's the one!
+            </div>
             icons for control descriptions
           </li>
           <li>Click "Reset" to restore defaults</li>
@@ -729,15 +750,15 @@
 
     <!-- Control Panel -->
     <div class="control-panel" id="controlPanel">
-      <div class="panel-header">
+      <button class="panel-header" popovertarget="panel">
         <h3>Style Controls</h3>
         <div class="panel-controls">
-          <button class="panel-btn" id="togglePanel" aria-label="Toggle panel">
+          <span class="panel-btn" id="togglePanel" aria-label="Toggle panel">
             −
-          </button>
+          </span>
         </div>
-      </div>
-      <div class="panel-content">
+      </button>
+      <div class="panel-content" popover="manual" id="panel">
         <!-- Colors -->
         <css-var-bind variable="--primary" target=":root" strategy="global">
           <div class="control-group">
@@ -752,7 +773,7 @@
             <input type="color" value="#000000" />
           </div>
         </css-var-bind>
-        <div popover id="tooltip-primary">
+        <div popover class="tooltip" id="tooltip-primary">
           Controls text color and primary elements
         </div>
 
@@ -767,7 +788,7 @@
             <input type="color" />
           </div>
         </css-var-bind>
-        <div popover id="tooltip-bg">Page background color</div>
+        <div popover class="tooltip" id="tooltip-bg">Page background color</div>
 
         <css-var-bind variable="--accent" target=":root" strategy="global">
           <div class="control-group">
@@ -782,7 +803,9 @@
             <input type="color" value="#000000" />
           </div>
         </css-var-bind>
-        <div popover id="tooltip-accent">Button, link, and highlight color</div>
+        <div popover class="tooltip" id="tooltip-accent">
+          Button, link, and highlight color
+        </div>
 
         <css-var-bind variable="--border" target=":root" strategy="global">
           <div class="control-group">
@@ -797,7 +820,7 @@
             <input type="color" value="#e5e5e5" />
           </div>
         </css-var-bind>
-        <div popover id="tooltip-border">
+        <div popover class="tooltip" id="tooltip-border">
           All border colors throughout the page
         </div>
 
@@ -823,7 +846,9 @@
             <input type="range" min="14" max="20" step="1" />
           </div>
         </css-var-bind>
-        <div popover id="tooltip-font">Base font size that scales all text</div>
+        <div popover class="tooltip" id="tooltip-font">
+          Base font size that scales all text
+        </div>
 
         <css-var-bind variable="--line-height" target=":root" strategy="global">
           <div class="control-group">
@@ -841,7 +866,7 @@
             <input type="range" value="1.6" min="1.4" max="2" step="0.1" />
           </div>
         </css-var-bind>
-        <div popover id="tooltip-line">
+        <div popover class="tooltip" id="tooltip-line">
           Vertical spacing between lines of text
         </div>
 
@@ -866,7 +891,9 @@
             <input type="range" min="-0.05" max="0.1" step="0.01" />
           </div>
         </css-var-bind>
-        <div popover id="tooltip-letter">Space between characters</div>
+        <div popover class="tooltip" id="tooltip-letter">
+          Space between characters
+        </div>
 
         <!-- Layout -->
         <css-var-bind
@@ -890,7 +917,7 @@
             <input type="range" min="0" max="24" step="2" />
           </div>
         </css-var-bind>
-        <div popover id="tooltip-radius">
+        <div popover class="tooltip" id="tooltip-radius">
           Roundness of buttons, panels, and inputs
         </div>
 
@@ -914,7 +941,7 @@
             <input type="range" value="1" min="0.5" max="2" step="0.1" />
           </div>
         </css-var-bind>
-        <div popover id="tooltip-spacing">
+        <div popover class="tooltip" id="tooltip-spacing">
           Multiplier for all padding and margins
         </div>
 
@@ -945,23 +972,23 @@
             <input type="range" value="900" min="600" max="1200" step="50" />
           </div>
         </css-var-bind>
-        <div popover id="tooltip-width">Maximum width of content</div>
-
-        <button class="reset-btn" id="resetBtn">Reset to Defaults</button>
+        <div popover class="tooltip" id="tooltip-width">
+          Maximum width of content
+        </div>
       </div>
     </div>
 
     <script>
       // Toggle panel
-      const panel = document.getElementById("controlPanel");
-      const toggleBtn = document.getElementById("togglePanel");
+      // const panel = document.getElementById("controlPanel");
+      // const toggleBtn = document.getElementById("togglePanel");
 
-      toggleBtn.addEventListener("click", () => {
-        panel.classList.toggle("collapsed");
-        toggleBtn.textContent = panel.classList.contains("collapsed")
-          ? "+"
-          : "−";
-      });
+      // toggleBtn.addEventListener("click", () => {
+      //   panel.classList.toggle("collapsed");
+      //   toggleBtn.textContent = panel.classList.contains("collapsed")
+      //     ? "+"
+      //     : "−";
+      // });
     </script>
   </body>
 </html>
